@@ -3,15 +3,25 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import serve from 'electron-serve'
+import windowStateManager from 'electron-window-state'
 
 const serveURL = serve({ directory: join(__dirname, '..', 'renderer') })
 
 let mainWindow: BrowserWindow
 function createWindow(): void {
+  // window state is useful when application is closed & opened again
+  // especially useful in dev, when app is reloaded on main/preload file changes
+  const windowState = windowStateManager({
+    defaultWidth: 800,
+    defaultHeight: 600
+  })
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: windowState.width,
+    height: windowState.height,
+    x: windowState.x,
+    y: windowState.y,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -19,6 +29,13 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     }
+  })
+
+  // initialize window state
+  windowState.manage(mainWindow)
+  // and save state when exiting
+  mainWindow.on('close', () => {
+    windowState.saveState(mainWindow)
   })
 
   mainWindow.on('ready-to-show', () => {
