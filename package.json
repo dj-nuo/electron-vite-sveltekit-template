@@ -12,12 +12,14 @@
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "start": "electron-vite preview",
-    "dev": "electron-vite dev",
-    "build": "npm run typecheck && electron-vite build",
+    "dev": "concurrently -p \"[{time}] [{name}]\" -n=sveltekit,electron -c=red,blue \"electron-vite dev --watch\" \"npm run dev:sveltekit\"",
+    "build": "npm run build:sveltekit; npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build && electron-builder --mac --config",
-    "build:linux": "npm run build && electron-builder --linux --config"
+    "build:linux": "npm run build && electron-builder --linux --config",
+    "dev:sveltekit": "cd src/renderer; npm run dev",
+    "build:sveltekit": "cd src/renderer; npm run build"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^1.0.3",
@@ -26,6 +28,7 @@
     "electron-serve": "^1.1.0"
   },
   "devDependencies": {
+    "concurrently": "^8.0.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@electron/notarize": "^1.2.3",
     "@types/node": "16.18.21",

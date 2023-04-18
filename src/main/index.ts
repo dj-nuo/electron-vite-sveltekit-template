@@ -6,9 +6,10 @@ import serve from 'electron-serve'
 
 const serveURL = serve({ directory: join(__dirname, '..', 'renderer') })
 
+let mainWindow: BrowserWindow
 function createWindow(): void {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -28,15 +29,26 @@ function createWindow(): void {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
-
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev) {
-    mainWindow.loadURL(import.meta.env.MAIN_VITE_ELECTRON_RENDERER_URL)
+    loadVite()
+    mainWindow.webContents.openDevTools()
+    // mainWindow.loadURL(import.meta.env.MAIN_VITE_ELECTRON_RENDERER_URL)
   } else {
     // mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
     serveURL(mainWindow)
   }
+}
+
+// this is needed to prevent blank screen when dev electron loads
+function loadVite(): void {
+  mainWindow.loadURL(import.meta.env.MAIN_VITE_ELECTRON_RENDERER_URL).catch((e) => {
+    console.log('Error loading URL, retrying', e)
+    setTimeout(() => {
+      loadVite()
+    }, 200)
+  })
 }
 
 // This method will be called when Electron has finished
