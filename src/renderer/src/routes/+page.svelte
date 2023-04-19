@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-
-	let homeDir = '';
+	import { sleep } from '../../../shared/sharedUtils';
 
 	// getting package.json version using safe SYNC call to main process
 	// see src/main/lib/utils.ts for implementation
-	let packageVersion = '';
-	onMount(() => {
+	let packageVersion = 'loading simulation with shared sleep() function in renderer';
+	onMount(async () => {
+		await sleep(2000);
 		packageVersion = window.electron.sendSync('appVersionSync', 'test arg');
 	});
 
 	// ASYNC call. Getting user home directory
 	// see src/main/lib/utils.ts for implementation
+	let homeDir = 'loading simulation with shared sleep() function in main...';
 	onMount(() => {
 		window.electron.send('homeDirPathAsync', 'async test arg');
 
@@ -25,7 +26,7 @@
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
 <div>
-	Here is package version (sync) fron package.json : {packageVersion}
+	Here is package version (sync) from package.json : {packageVersion}
 </div>
 
 <div>

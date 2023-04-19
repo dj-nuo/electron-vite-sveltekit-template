@@ -5,7 +5,9 @@
     "src/main/*",
     "src/main/**/*", 
     "src/preload/*",
-    "src/preload/**/*"],
+    "src/preload/**/*",
+    "src/shared/*",
+    "src/shared/**/*"],
   "compilerOptions": {
     "composite": true,
     "types": ["electron-vite/node"]
