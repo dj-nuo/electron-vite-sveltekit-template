@@ -5,6 +5,8 @@ import icon from '../../resources/icon.png?asset'
 import serve from 'electron-serve'
 import windowStateManager from 'electron-window-state'
 
+import './lib/utils'
+
 const serveURL = serve({ directory: join(__dirname, '..', 'renderer') })
 
 let mainWindow: BrowserWindow
