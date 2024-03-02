@@ -1,6 +1,5 @@
 import adapter from '@sveltejs/adapter-static';
-// import preprocess from 'svelte-preprocess'
-import { vitePreprocess as preprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess as preprocess } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
