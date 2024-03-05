@@ -15,7 +15,7 @@ ipcMain.on('appVersionSync', (event, arg) => {
 });
 
 ipcMain.on('homeDirPathAsync', async (event, arg) => {
-	console.log(event.isTrusted);
+	console.log(event);
 	console.log(arg);
 	const response = os.homedir();
 
